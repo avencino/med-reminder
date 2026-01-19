@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+functions/node_modules/
+
+# Build
+dist/
+build/
+*.log
+
+# Environment
+.env
+.env.local
+.env.production
+.env.deploy
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+emulator-data/
+
+# Docker
+.docker/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+*.tgz
+.npm
+.eslintcache

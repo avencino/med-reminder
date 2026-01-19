@@ -1,0 +1,55 @@
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    container_name: medicine-reminder-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./index.html:/app/index.html
+      - ./vite.config.ts:/app/vite.config.ts
+      - ./tsconfig.json:/app/tsconfig.json
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - .env.development
+    depends_on:
+      - firebase-emulators
+    networks:
+      - medicine-reminder-network
+
+  firebase-emulators:
+    build:
+      context: .
+      dockerfile: docker/firebase/Dockerfile
+    container_name: medicine-reminder-firebase
+    ports:
+      - "4000:4000"   # Emulator UI
+      - "5002:5000"   # Hosting Emulator ← 5000→5002に変更
+      - "5001:5001"   # Functions Emulator
+      - "8080:8080"   # Firestore Emulator
+      - "9099:9099"   # Auth Emulator
+    volumes:
+      - ./functions/src:/app/functions/src
+      - firebase-emulator-data:/data
+      - ./firebase.json:/app/firebase.json
+      - ./firestore.rules:/app/firestore.rules
+    environment:
+      - FIREBASE_PROJECT=medicine-reminder-dev
+      - GCLOUD_PROJECT=medicine-reminder-dev
+      - FUNCTIONS_EMULATOR=true
+    networks:
+      - medicine-reminder-network
+
+volumes:
+  firebase-emulator-data:
+    driver: local
+
+networks:
+  medicine-reminder-network:
+    driver: bridge
